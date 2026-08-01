@@ -1,69 +1,95 @@
-# Quorum
+# personai
 
-An AI persona code reviewer for GitHub pull requests. A panel of focused
-reviewers (a staff engineer, a security reviewer, a performance reviewer) each
-reads a PR through its own lens and emits structured findings.
+**An open-source AI code reviewer for GitHub pull requests, with customizable
+reviewer personas.** Point it at a PR and a persona — a security engineer, a
+staff engineer, a readability reviewer — and it reads the diff through that lens
+and reports structured findings.
 
-> Codename — rename freely. The one design commitment worth keeping is the
-> decoupling below.
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)
+![Status: early development](https://img.shields.io/badge/status-early%20development-orange.svg)
 
-## The one architectural idea
+<!-- After pushing to GitHub, add a CI badge:
+![CI](https://github.com/<owner>/personai-code-reviewer/actions/workflows/ci.yml/badge.svg) -->
 
-The AI core is independent of GitHub. It has a single interface:
+> ⚠️ Early development — the interface may change. Feedback and contributions are
+> very welcome.
 
-```
-PRContext  ->  review()  ->  list[Finding]
-```
+## What it does
 
-- **`PRContext`** and **`Finding`** ([contracts.py](src/quorum/contracts.py)) are the seam.
-- **`review()`** ([reviewer.py](src/quorum/reviewer.py)) is the intelligence. It never imports GitHub.
-- An **adapter** produces a `PRContext` and consumes `Finding`s. Today that's a
-  CLI ([cli.py](src/quorum/cli.py)) reading the GitHub REST API
-  ([github_client.py](src/quorum/github_client.py)). Next it's a GitHub Action —
-  a different adapter around the *same* core.
+- 🎭 **Customizable reviewer personas** — review through a specific lens
+  (security, staff engineer, performance, readability), and add your own.
+- 🧩 **Structured findings** — every finding has a file, line, severity,
+  category, and confidence, so results are consistent and machine-readable, not
+  a wall of prose.
+- 🔌 **Integration-agnostic core** — the reviewer doesn't know GitHub exists. A
+  thin adapter feeds it a pull request; today that's a CLI, next a GitHub Action.
+- 📊 **Metrics (planned)** — aggregate findings into per-review metrics: bugs
+  found, vulnerabilities detected, potential lines reduced, and more.
 
-This is why the integration surface never caps how deep the AI can go: the AI
-doesn't live in the integration layer.
+## Quickstart
 
-## Usage
+Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).
 
 ```bash
 uv sync
-export GITHUB_TOKEN=...        # fine-grained PAT, Contents+PRs read
-uv run quorum review https://github.com/owner/repo/pull/123 --persona security
+export GITHUB_TOKEN=...     # fine-grained PAT: Contents + Pull requests, read
+uv run personai review https://github.com/owner/repo/pull/123 --persona security
 ```
+
+Available personas: `senior`, `security`, `performance`, `readability`.
 
 Anthropic credentials resolve from the environment (`ANTHROPIC_API_KEY`) or an
 `ant auth login` profile.
 
-## Roadmap
+## How it works
 
-The build order puts intelligence and measurement ahead of integration polish.
-
-- [x] **Stage 0 — Contracts.** `PRContext` / `Finding`, the decoupling seam.
-- [x] **Stage 1 — Vertical slice.** Fetch a real PR, one persona, structured
-      findings, printed. Proves the pipe end to end.
-- [ ] **Stage 1b — GitHub Action.** Wrap the same core; post findings as review
-      comments automatically on every PR.
-- [ ] **Stage 2 — Eval harness.** Labeled PRs with known issues; precision /
-      recall on real findings and a false-positive rate. The primary quality
-      lever and the main thing to talk through in an interview.
-- [ ] **Stage 3 — Context retrieval.** Feed the model callers/callees, related
-      tests, and the PR description — not just the raw diff. Token budgeting.
-- [ ] **Stage 4 — Persona panel + orchestration.** Run reviewers concurrently;
-      merge and deduplicate their findings.
-- [ ] **Stage 5 — Production concerns.** Cheap-model triage, caching,
-      hallucinated-line handling, cost/latency.
-
-## Layout
+personai is built around one stable interface:
 
 ```
-src/quorum/
-  contracts.py      # Stage 0 — the seam (no GitHub, no Claude)
+PRContext  ──►  review(pr, persona)  ──►  list[Finding]
+```
+
+The AI core (`reviewer.py`) turns a pull request into findings using Claude and
+imports no integration code. An adapter produces the `PRContext` and consumes
+the `Finding`s — so the same core runs behind a CLI today and a GitHub Action
+tomorrow without changing the review logic. See
+[ARCHITECTURE.md](ARCHITECTURE.md) for the full map.
+
+## Roadmap
+
+Build order puts intelligence and measurement ahead of integration polish.
+
+- [x] **Contracts** — `PRContext` / `Finding`, the decoupling seam.
+- [x] **Vertical slice** — fetch a real PR, one persona, structured findings, CLI.
+- [ ] **Eval harness** — labeled PRs; precision / recall / false-positive rate.
+- [ ] **Context retrieval** — feed the model callers/callees and related tests,
+      not just the raw diff.
+- [ ] **Persona panel** — run reviewers concurrently, merge and dedup findings.
+- [ ] **Metrics reporting** — bugs found, vulnerabilities detected, lines reduced.
+- [ ] **GitHub Action** — post findings as PR review comments automatically.
+
+## Project layout
+
+```
+src/personai/
+  contracts.py      # the seam — PRContext / Finding (no GitHub, no Claude)
   reviewer.py       # the AI core: PRContext -> Findings
   personas.py       # reviewer lenses (data, not code)
   github_client.py  # GitHub adapter (the only GitHub-aware module)
   cli.py            # CLI adapter
-tests/
-  test_contracts.py # offline tests — no network, no model
+tests/              # offline tests — no network, no model
 ```
+
+## Contributing
+
+Contributions are welcome — bug reports, new personas, docs, code. See
+[CONTRIBUTING.md](CONTRIBUTING.md) to get set up, and
+[good first contributions](CONTRIBUTING.md#good-first-contributions) for where to
+start. Adding a reviewer persona is a one-entry change in
+[`personas.py`](src/personai/personas.py). By participating you agree to the
+[Code of Conduct](CODE_OF_CONDUCT.md).
+
+## License
+
+[MIT](LICENSE) © Isaiah McNealy

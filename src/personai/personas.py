@@ -53,8 +53,20 @@ PERFORMANCE = Persona(
     ),
 )
 
+READABILITY = Persona(
+    key="readability",
+    name="Readability Reviewer",
+    lens=(
+        "You are a reviewer focused on readability and maintainability. You look "
+        "for unclear names, dead code, tangled control flow, missing or "
+        "misleading docs, and needless complexity. You suggest concrete "
+        "simplifications. You ignore security and deep performance concerns — "
+        "other reviewers cover those."
+    ),
+)
 
-REGISTRY: dict[str, Persona] = {p.key: p for p in (SENIOR, SECURITY, PERFORMANCE)}
+
+REGISTRY: dict[str, Persona] = {p.key: p for p in (SENIOR, SECURITY, PERFORMANCE, READABILITY)}
 DEFAULT = SENIOR
 
 
@@ -63,4 +75,4 @@ def get(key: str) -> Persona:
         return REGISTRY[key]
     except KeyError:
         available = ", ".join(REGISTRY)
-        raise ValueError(f"Unknown persona {key!r}. Available: {available}")
+        raise ValueError(f"Unknown persona {key!r}. Available: {available}") from None

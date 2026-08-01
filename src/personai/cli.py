@@ -1,4 +1,4 @@
-"""CLI adapter (Stage 1): `quorum review <PR-url>`.
+"""CLI adapter (Stage 1): `personai review <PR-url>`.
 
 Fetch a real PR, run one persona, print findings. This is the thin integration
 that proves the pipe end to end. The GitHub Action wrapper (Stage 1b) is a
@@ -20,7 +20,7 @@ _SEVERITY_ORDER = ["critical", "high", "medium", "low", "info"]
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="quorum", description=__doc__)
+    parser = argparse.ArgumentParser(prog="personai", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
 
     rev = sub.add_parser("review", help="Review a GitHub pull request.")

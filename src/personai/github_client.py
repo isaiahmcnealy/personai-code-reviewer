@@ -13,9 +13,7 @@ import httpx
 
 from .contracts import ChangedFile, PRContext
 
-_PR_URL = re.compile(
-    r"https?://github\.com/(?P<owner>[^/]+)/(?P<repo>[^/]+)/pull/(?P<number>\d+)"
-)
+_PR_URL = re.compile(r"https?://github\.com/(?P<owner>[^/]+)/(?P<repo>[^/]+)/pull/(?P<number>\d+)")
 _API = "https://api.github.com"
 
 
@@ -24,8 +22,7 @@ def parse_pr_url(url: str) -> tuple[str, str, int]:
     m = _PR_URL.match(url.strip())
     if not m:
         raise ValueError(
-            f"Not a GitHub PR URL: {url!r}\n"
-            "Expected e.g. https://github.com/owner/repo/pull/123"
+            f"Not a GitHub PR URL: {url!r}\nExpected e.g. https://github.com/owner/repo/pull/123"
         )
     return m["owner"], m["repo"], int(m["number"])
 

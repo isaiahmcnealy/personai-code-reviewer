@@ -14,12 +14,12 @@ those in code if you need them.
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
 
-class Severity(str, Enum):
+class Severity(StrEnum):
     critical = "critical"
     high = "high"
     medium = "medium"
@@ -27,7 +27,7 @@ class Severity(str, Enum):
     info = "info"
 
 
-class Category(str, Enum):
+class Category(StrEnum):
     correctness = "correctness"
     security = "security"
     performance = "performance"
@@ -81,9 +81,7 @@ class Finding(BaseModel):
     category: Category
     title: str = Field(description="One-line summary of the issue.")
     body: str = Field(description="Explanation and, where useful, a suggested fix.")
-    confidence: float = Field(
-        description="How sure the reviewer is this is a real issue, 0.0-1.0."
-    )
+    confidence: float = Field(description="How sure the reviewer is this is a real issue, 0.0-1.0.")
 
 
 class ReviewResult(BaseModel):

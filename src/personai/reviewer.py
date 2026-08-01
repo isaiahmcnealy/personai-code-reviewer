@@ -3,8 +3,8 @@
 This module knows nothing about GitHub or the CLI. It takes a `PRContext`, runs
 one persona through Claude with a constrained output schema, and returns
 validated `Finding`s. Everything the project builds later — retrieval, a
-persona panel, the eval harness — is layered around this interface without
-changing it.
+persona panel, the eval harness, the metrics report — is layered around this
+interface without changing it.
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ from .contracts import Finding, PRContext, ReviewResult
 from .personas import DEFAULT, Persona
 
 # claude-opus-5 thinks by default at high effort — good for review reasoning —
-# and supports structured outputs. See the claude-api skill for the current
+# and supports structured outputs. See the claude-api reference for the current
 # model table.
 MODEL = "claude-opus-5"
 

@@ -2,10 +2,9 @@
 
 import pytest
 
-from quorum.contracts import Category, Finding, Severity
-from quorum.github_client import parse_pr_url
-from quorum.reviewer import _render
-from quorum.contracts import ChangedFile, PRContext
+from personai.contracts import Category, ChangedFile, Finding, PRContext, Severity
+from personai.github_client import parse_pr_url
+from personai.reviewer import _render
 
 
 def test_parse_pr_url():
