@@ -32,15 +32,54 @@ and reports structured findings.
 Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).
 
 ```bash
+# 1. Install
 uv sync
-export GITHUB_TOKEN=...     # fine-grained PAT: Contents + Pull requests, read
+
+# 2. Add your credentials — copy the example and fill in both values
+cp .env.example .env
+```
+
+Edit `.env`:
+
+```ini
+GITHUB_TOKEN=github_pat_...     # fine-grained PAT: Contents + Pull requests (read)
+ANTHROPIC_API_KEY=sk-ant-...    # your Claude API key
+```
+
+`.env` is gitignored, so your keys never get committed. (Prefer the shell?
+`export` those two variables instead.) Then review any pull request:
+
+```bash
 uv run personai review https://github.com/owner/repo/pull/123 --persona security
 ```
 
-Available personas: `senior`, `security`, `performance`, `readability`.
+Available personas: `senior` (default), `security`, `performance`, `readability`.
 
-Anthropic credentials resolve from the environment (`ANTHROPIC_API_KEY`) or an
-`ant auth login` profile.
+## Example
+
+```text
+$ uv run personai review https://github.com/cli/cli/pull/14035 --persona senior
+
+Reviewing cli/cli#14035 as Staff Engineer (9 files)...
+
+3 finding(s):
+
+[MEDIUM] correctness — api/queries_projects_v2.go:330
+  Dropping the substring fallback narrows read:project detection and can
+  break graceful degradation  (confidence 0.60)
+  The old check matched any error whose text contained the scope message;
+  the new path only fires when the error unwraps to api.GraphQLError with
+  Type == "INSUFFICIENT_SCOPES". Responses that carry the message without
+  that exact type would now hard-fail instead of degrading gracefully...
+
+[LOW] maintainability — api/queries_repo.go:1619
+  Duplicated dedupe/sort logic for missing scopes  (confidence 0.70)
+  ...
+```
+
+Each finding carries a file, line, severity, category, confidence, and a
+concrete suggestion — the same structured data an integration (e.g. a GitHub
+Action) can post as inline review comments.
 
 ## How it works
 
