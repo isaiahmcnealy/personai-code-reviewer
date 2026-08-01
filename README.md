@@ -97,16 +97,11 @@ tomorrow without changing the review logic. See
 
 ## Roadmap
 
-Build order puts intelligence and measurement ahead of integration polish.
+Stage 0 (contracts) and Stage 1 (CLI slice) are done; the **eval harness** is
+next. Build order puts intelligence and measurement ahead of integration polish.
 
-- [x] **Contracts** — `PRContext` / `Finding`, the decoupling seam.
-- [x] **Vertical slice** — fetch a real PR, one persona, structured findings, CLI.
-- [ ] **Eval harness** — labeled PRs; precision / recall / false-positive rate.
-- [ ] **Context retrieval** — feed the model callers/callees and related tests,
-      not just the raw diff.
-- [ ] **Persona panel** — run reviewers concurrently, merge and dedup findings.
-- [ ] **Metrics reporting** — bugs found, vulnerabilities detected, lines reduced.
-- [ ] **GitHub Action** — post findings as PR review comments automatically.
+See **[ROADMAP.md](ROADMAP.md)** for the full plan, per-stage acceptance
+criteria, and the backlog.
 
 ## Project layout
 

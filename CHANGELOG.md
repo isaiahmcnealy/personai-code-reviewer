@@ -13,12 +13,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Open-source scaffolding: license, contributing guide, code of conduct,
   architecture doc, CI, issue/PR templates.
 
-### Planned
-- Eval harness (precision / recall / false-positive rate).
-- Context retrieval beyond the raw diff.
-- Persona panel with finding merge + dedup.
-- Metrics reporting (bugs found, vulnerabilities detected, lines reduced).
-- GitHub Action that posts findings as PR review comments.
+Planned work lives in [ROADMAP.md](ROADMAP.md); this changelog records only
+what has shipped.
 
 ## [0.1.0] - 2026-08-01
 - Initial scaffold.

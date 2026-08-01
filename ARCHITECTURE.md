@@ -72,15 +72,9 @@ the Anthropic SDK's structured-output support, so responses are always valid and
 parseable — no brittle text scraping. The model is `claude-opus-5`, which
 reasons before answering by default.
 
-## Planned layers (see [README](README.md) roadmap)
+## Planned layers
 
-These slot around the core without changing its interface:
-
-- **Eval harness** — score `review()` output against labeled PRs (precision,
-  recall, false-positive rate). The primary quality lever.
-- **Context retrieval** — feed the model callers/callees and related tests, not
-  just the raw diff. Token budgeting.
-- **Persona panel + orchestration** — run reviewers concurrently, then merge and
-  deduplicate their findings.
-- **Metrics / reporting** — aggregate findings into per-review metrics (bugs
-  found, vulnerabilities detected, potential lines reduced, and similar).
+The eval harness, context retrieval, persona panel, metrics reporting, and the
+GitHub Action all slot around the core **without changing its interface** — each
+is a new consumer of `PRContext`/`Finding`, not a change to `review()`. See
+[ROADMAP.md](ROADMAP.md) for the staged plan and acceptance criteria.
