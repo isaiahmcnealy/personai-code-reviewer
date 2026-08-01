@@ -11,6 +11,8 @@ import argparse
 import os
 import sys
 
+from dotenv import load_dotenv
+
 from . import personas
 from .contracts import Finding
 from .github_client import fetch_pr
@@ -20,6 +22,10 @@ _SEVERITY_ORDER = ["critical", "high", "medium", "low", "info"]
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Load a local .env (if present) so GITHUB_TOKEN / ANTHROPIC_API_KEY can live
+    # in a gitignored file instead of the shell. Real env vars still win.
+    load_dotenv()
+
     parser = argparse.ArgumentParser(prog="personai", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
 
