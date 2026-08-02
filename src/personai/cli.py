@@ -38,9 +38,27 @@ def main(argv: list[str] | None = None) -> int:
         help=f"Reviewer persona (default: {personas.DEFAULT.key}).",
     )
 
+    ev = sub.add_parser("eval", help="Score the reviewer against labeled fixtures.")
+    ev.add_argument(
+        "--persona",
+        default=personas.DEFAULT.key,
+        choices=list(personas.REGISTRY),
+        help=f"Reviewer persona (default: {personas.DEFAULT.key}).",
+    )
+    ev.add_argument(
+        "--fixtures", default=None, help="Directory of *.json cases (default: built-in)."
+    )
+    ev.add_argument(
+        "--json", action="store_true", dest="as_json", help="Emit machine-readable JSON."
+    )
+    ev.add_argument("--line-tolerance", type=int, default=3, help="Line-match window (default: 3).")
+    ev.add_argument("--min-confidence", type=float, default=0.0, help="Ignore findings below this.")
+
     args = parser.parse_args(argv)
     if args.command == "review":
         return _run_review(args.pr_url, args.persona)
+    if args.command == "eval":
+        return _run_eval(args)
     parser.error(f"unknown command {args.command!r}")
     return 2
 
@@ -57,6 +75,33 @@ def _run_review(pr_url: str, persona_key: str) -> int:
     print(f"Reviewing {pr.slug} as {persona.name} ({len(pr.files)} files)...\n")
     findings = review(pr, persona)
     _print_findings(findings)
+    return 0
+
+
+def _run_eval(args: argparse.Namespace) -> int:
+    import json
+
+    from .eval.dataset import load_cases
+    from .eval.report import format_text
+    from .eval.runner import run_eval
+
+    persona = personas.get(args.persona)
+    cases = load_cases(args.fixtures)
+    if not cases:
+        where = args.fixtures or "built-in fixtures"
+        print(f"error: no eval cases found in {where}", file=sys.stderr)
+        return 1
+
+    report = run_eval(
+        cases,
+        persona=persona,
+        line_tolerance=args.line_tolerance,
+        min_confidence=args.min_confidence,
+    )
+    if args.as_json:
+        print(json.dumps(report.to_dict(), indent=2))
+    else:
+        print(format_text(report))
     return 0
 
 

@@ -1,0 +1,20 @@
+{
+  "name": "clean_rename",
+  "pr": {
+    "owner": "example",
+    "repo": "app",
+    "number": 1,
+    "title": "Rename local variable for clarity",
+    "description": "",
+    "files": [
+      {
+        "filename": "app/greet.py",
+        "status": "modified",
+        "additions": 2,
+        "deletions": 2,
+        "patch": "@@ -3,3 +3,3 @@ def greet(name):\n     print(\"hi\")\n-    msg = \"Hello, \" + name\n-    print(msg)\n+    greeting = \"Hello, \" + name\n+    print(greeting)"
+      }
+    ]
+  },
+  "expected": []
+}

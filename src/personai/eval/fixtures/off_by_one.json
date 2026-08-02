@@ -1,0 +1,27 @@
+{
+  "name": "off_by_one",
+  "pr": {
+    "owner": "example",
+    "repo": "app",
+    "number": 1,
+    "title": "Tweak average loop",
+    "description": "",
+    "files": [
+      {
+        "filename": "app/stats.py",
+        "status": "modified",
+        "additions": 1,
+        "deletions": 1,
+        "patch": "@@ -5,4 +5,4 @@ def average(nums):\n     total = 0\n-    for i in range(len(nums)):\n+    for i in range(len(nums) - 1):\n         total += nums[i]\n     return total / len(nums)"
+      }
+    ]
+  },
+  "expected": [
+    {
+      "file": "app/stats.py",
+      "line": 6,
+      "category": "correctness",
+      "note": "off-by-one: range(len-1) skips the last element"
+    }
+  ]
+}

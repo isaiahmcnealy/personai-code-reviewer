@@ -1,10 +1,15 @@
-.PHONY: install test lint fmt check
+.PHONY: install test lint fmt check eval
 
 install:
 	uv sync --extra dev
 
 test:
 	uv run pytest -q
+
+# Live evaluation — real model calls, needs ANTHROPIC_API_KEY, costs a few cents.
+# Not part of `check` (nondeterministic and not free).
+eval:
+	uv run personai eval
 
 lint:
 	uv run ruff check .

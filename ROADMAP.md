@@ -11,7 +11,7 @@ one architectural rule — the AI core stays decoupled from any integration (see
 |------:|-----------|:------:|
 | 0 | Contracts | ✅ |
 | 1 | Vertical slice (CLI) | ✅ |
-| 2 | Eval harness | ⬜ |
+| 2 | Eval harness | ✅ |
 | 3 | Context retrieval | ⬜ |
 | 4 | Persona panel + orchestration | ⬜ |
 | 5 | Metrics reporting | ⬜ |
@@ -33,15 +33,15 @@ Prove the pipe end to end.
 - [x] Personas: senior, security, performance, readability.
 - [x] `personai review <url>` CLI; validated on a live public PR.
 
-### ⬜ Stage 2 — Eval harness  ← next
+### ✅ Stage 2 — Eval harness
 Measure review quality instead of guessing. The primary quality lever.
-- [ ] A labeled set of PRs with known issues (planted or curated).
-- [ ] A runner that scores `review()` output against the labels.
-- [ ] Metrics: precision, recall on real issues, and false-positive rate.
-- [ ] Reproducible report so any prompt/model change can be compared.
-- **Done when:** `make eval` prints precision/recall/FP over the labeled set.
+- [x] A labeled set of PRs with known issues (6 JSON fixtures under `eval/fixtures/`).
+- [x] A runner that scores `review()` output against the labels (`eval/`).
+- [x] Metrics: precision, recall on real issues, and false-positive rate.
+- [x] Reproducible report so any prompt/model change can be compared.
+- **Done when:** `make eval` prints precision/recall/FP over the labeled set. ✓
 
-### ⬜ Stage 3 — Context retrieval
+### ⬜ Stage 3 — Context retrieval  ← next
 Give the model more than the raw diff.
 - [ ] Pull in callers/callees of changed symbols and related tests.
 - [ ] Rank and budget context to a token limit.

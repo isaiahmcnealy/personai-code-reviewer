@@ -1,0 +1,33 @@
+{
+  "name": "multi_issue",
+  "pr": {
+    "owner": "example",
+    "repo": "app",
+    "number": 1,
+    "title": "Add make_tags helper",
+    "description": "",
+    "files": [
+      {
+        "filename": "app/tags.py",
+        "status": "modified",
+        "additions": 7,
+        "deletions": 0,
+        "patch": "@@ -1,2 +1,9 @@\n import os\n \n+def make_tags(name, tags=[]):\n+    prefix = os.getenv(\"PREFIX\")\n+    tags.append(name)\n+    return tags\n+\n+\n+VALUES = make_tags(\"x\")"
+      }
+    ]
+  },
+  "expected": [
+    {
+      "file": "app/tags.py",
+      "line": 3,
+      "category": "correctness",
+      "note": "mutable default argument tags=[] is shared across calls"
+    },
+    {
+      "file": "app/tags.py",
+      "line": 4,
+      "category": "maintainability",
+      "note": "unused variable prefix"
+    }
+  ]
+}
