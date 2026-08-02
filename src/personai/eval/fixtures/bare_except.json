@@ -1,0 +1,27 @@
+{
+  "name": "bare_except",
+  "pr": {
+    "owner": "example",
+    "repo": "app",
+    "number": 1,
+    "title": "Parse config with fallback",
+    "description": "",
+    "files": [
+      {
+        "filename": "app/config.py",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 0,
+        "patch": "@@ -8,2 +8,6 @@ def load_config(path):\n     with open(path) as f:\n         raw = f.read()\n+    try:\n+        return json.loads(raw)\n+    except:\n+        return {}"
+      }
+    ]
+  },
+  "expected": [
+    {
+      "file": "app/config.py",
+      "line": 12,
+      "category": "maintainability",
+      "note": "bare except swallows all errors, incl. KeyboardInterrupt"
+    }
+  ]
+}

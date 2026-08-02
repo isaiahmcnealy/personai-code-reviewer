@@ -81,6 +81,30 @@ Each finding carries a file, line, severity, category, confidence, and a
 concrete suggestion — the same structured data an integration (e.g. a GitHub
 Action) can post as inline review comments.
 
+## Evaluation
+
+Review quality is measured, not eyeballed. `make eval` runs the reviewer over a
+set of labeled fixtures (diffs with known planted issues, plus a clean one) and
+scores it on **precision**, **recall**, and **false-positive rate** — so any
+prompt, model, or persona change can be compared against a baseline.
+
+```text
+$ make eval
+
+Aggregate (6 cases):
+  Precision          0.60   (TP 6 / TP+FP 10)
+  Recall             1.00   (TP 6 / TP+FN 6)
+  False positives    4      (0.67 per case)
+  Category accuracy  0.83
+```
+
+Matching is deterministic (same file, line within a tolerance window); the fixtures
+are *closed-world* (all real issues labeled), so precision is a lower bound —
+genuine issues the model finds beyond the labels count against it until labeled.
+The scoring logic is fully unit-tested offline; `make eval` itself makes real
+model calls and needs `ANTHROPIC_API_KEY`. See [ROADMAP.md](ROADMAP.md) for what
+this unlocks (context retrieval, a persona panel).
+
 ## How it works
 
 personai is built around one stable interface:
@@ -97,8 +121,9 @@ tomorrow without changing the review logic. See
 
 ## Roadmap
 
-Stage 0 (contracts) and Stage 1 (CLI slice) are done; the **eval harness** is
-next. Build order puts intelligence and measurement ahead of integration polish.
+Stages 0–2 are done (contracts, CLI slice, **eval harness**); **context
+retrieval** is next. Build order puts intelligence and measurement ahead of
+integration polish.
 
 See **[ROADMAP.md](ROADMAP.md)** for the full plan, per-stage acceptance
 criteria, and the backlog.

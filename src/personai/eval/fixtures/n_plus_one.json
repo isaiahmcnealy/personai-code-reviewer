@@ -1,0 +1,27 @@
+{
+  "name": "n_plus_one",
+  "pr": {
+    "owner": "example",
+    "repo": "app",
+    "number": 1,
+    "title": "List orders for users",
+    "description": "",
+    "files": [
+      {
+        "filename": "app/orders.py",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 0,
+        "patch": "@@ -20,2 +20,6 @@ def list_orders(user_ids):\n     orders = []\n+    for uid in user_ids:\n+        user = db.get_user(uid)\n+        orders.append(load_orders(user))\n+    return orders"
+      }
+    ]
+  },
+  "expected": [
+    {
+      "file": "app/orders.py",
+      "line": 22,
+      "category": "performance",
+      "note": "N+1: one DB query per user inside the loop"
+    }
+  ]
+}

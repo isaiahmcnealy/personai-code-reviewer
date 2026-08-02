@@ -1,0 +1,27 @@
+{
+  "name": "sql_injection",
+  "pr": {
+    "owner": "example",
+    "repo": "app",
+    "number": 1,
+    "title": "Add find_user helper",
+    "description": "",
+    "files": [
+      {
+        "filename": "app/db.py",
+        "status": "modified",
+        "additions": 5,
+        "deletions": 0,
+        "patch": "@@ -10,2 +10,7 @@ def get_conn():\n     return sqlite3.connect(DB)\n \n+def find_user(username):\n+    cur = get_conn().cursor()\n+    query = f\"SELECT * FROM users WHERE name = '{username}'\"\n+    cur.execute(query)\n+    return cur.fetchone()"
+      }
+    ]
+  },
+  "expected": [
+    {
+      "file": "app/db.py",
+      "line": 14,
+      "category": "security",
+      "note": "SQL injection: username interpolated into query via f-string"
+    }
+  ]
+}

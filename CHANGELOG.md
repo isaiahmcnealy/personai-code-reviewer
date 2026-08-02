@@ -10,6 +10,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Decoupled review core: `PRContext -> review() -> list[Finding]`.
 - Reviewer personas: staff engineer, security, performance, readability.
 - GitHub adapter (PR URL → `PRContext`) and `personai review` CLI.
+- Eval harness (`personai eval` / `make eval`): labeled JSON fixtures, deterministic
+  scoring (precision / recall / false-positive rate), and a dependency-injected
+  runner unit-tested offline.
 - Open-source scaffolding: license, contributing guide, code of conduct,
   architecture doc, CI, issue/PR templates.
 
